@@ -87,7 +87,10 @@ nav button.on{color:var(--orange-d)}
     <div class="row"><div class="l"><b>Cães e gatos</b></div><div class="step" data-k="pets"></div></div>
   </div>
   <div class="card">
-    <h2>Sua necessidade para 72 horas</h2>
+    <div class="row"><div class="l"><b>Por quantos dias?</b><small>a Defesa Civil recomenda 3 dias (72 horas)</small></div><div class="step" data-k="dias"></div></div>
+  </div>
+  <div class="card">
+    <h2 id="resTitle">Sua necessidade para 72 horas</h2>
     <div class="res" id="res"></div>
     <p class="note">Água: 2 litros por pessoa por dia para beber, referência da Defesa Civil. Se tiver espaço, guarde mais para higiene e cozinha. Quantidades de comida são uma sugestão prática para 3 refeições por dia.</p>
   </div>
@@ -151,8 +154,8 @@ nav button.on{color:var(--orange-d)}
 
 <script>
 var store={get:function(k,d){try{var v=localStorage.getItem('k72_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('k72_'+k,JSON.stringify(v))}catch(e){}}};
-var fam=store.get('fam',{adultos:2,criancas:2,bebes:0,idosos:0,pets:0});
-var lim={adultos:[1,12],criancas:[0,10],bebes:[0,5],idosos:[0,6],pets:[0,6]};
+var fam=store.get('fam',{adultos:2,criancas:2,bebes:0,idosos:0,pets:0});if(!fam.dias)fam.dias=3;
+var lim={adultos:[1,12],criancas:[0,10],bebes:[0,5],idosos:[0,6],pets:[0,6],dias:[1,7]};
 
 document.querySelectorAll('.step').forEach(function(s){
   var k=s.dataset.k;
@@ -168,16 +171,18 @@ function pessoas(){return fam.adultos+fam.criancas+fam.bebes}
 function upd(){
   store.set('fam',fam);
   var p=pessoas();
-  var agua=p*6, ref=p*9, latas=Math.ceil((fam.adultos+fam.criancas)*3), bisc=Math.ceil((fam.adultos+fam.criancas)*1.5), lanches=(fam.adultos+fam.criancas)*6;
+  var d=fam.dias, q=fam.adultos+fam.criancas;
+  var agua=p*2*d, ref=p*3*d, latas=q*d, bisc=Math.ceil(q*d*0.5), lanches=q*2*d;
+  document.getElementById('resTitle').textContent='Resultado para '+p+(p===1?' pessoa':' pessoas')+' por '+d+(d===1?' dia':' dias');
   var h='';
   h+=box(agua+' L','Água para beber',true);
   h+=box(ref,'Refeições');
   h+=box(latas,'Latas de proteína');
   h+=box(bisc,'Pacotes de biscoito');
   h+=box(lanches,'Lanches (barras, frutas secas)');
-  if(fam.bebes) h+=box(fam.bebes*24,'Fraldas (8 por dia)');
+  if(fam.bebes) h+=box(fam.bebes*8*d,'Fraldas (8 por dia)');
   if(fam.idosos) h+=box(fam.idosos,'Kit de remédios + receitas');
-  if(fam.pets) h+=box(fam.pets,'Ração para 3 dias + água extra');
+  if(fam.pets) h+=box(fam.pets,'Pet(s): ração para '+d+(d===1?' dia':' dias')+' + água extra');
   document.getElementById('res').innerHTML=h;
   buildChecklists(); buildShop();
 }
