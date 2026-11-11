@@ -3,237 +3,384 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#14284B">
+<meta name="theme-color" content="#0F1F3D">
 <meta name="robots" content="noindex">
 <title>Kit 72h — Calculadora Inteligente</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kit 72h">
 <style>
-:root{--navy:#14284B;--navy2:#0E1C36;--ink:#1E2433;--muted:#5B6475;--paper:#FBF7F0;--line:#E6DED2;--orange:#E8772E;--orange-d:#C55F1C;--soft:#FCE8D9;--teal:#1F8A7A;--teal-soft:#DDF1EC}
+:root{--navy:#14284B;--navy2:#0F1F3D;--navy3:#1C3560;--ink:#1E2433;--muted:#5B6475;--paper:#F6F1E8;--line:#E8E0D3;--or:#F07A2A;--or2:#E8601C;--orsoft:#FDEBDD;--green:#22A06B;--greensoft:#E3F5EC;--blue:#2F80ED;--bluesoft:#E6F0FC;--r:20px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-header{background:var(--navy);color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 18px}
-header .k{font-size:12px;font-weight:800;letter-spacing:.16em;color:#F6B98A}
-header h1{font-size:24px;font-weight:900;margin-top:4px}
-header p{color:#C9D3E6;font-size:14px;margin-top:4px}
-main{max-width:640px;margin:0 auto;padding:16px}
-.view{display:none}.view.on{display:block}
-.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
-h2{font-size:18px;color:var(--navy);margin-bottom:10px}
-.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-.row:last-child{border-bottom:0}
-.row .l b{display:block;color:var(--navy)}.row .l small{color:var(--muted);font-size:13px}
-.step{display:flex;align-items:center;gap:6px}
-.step button{width:44px;height:44px;border-radius:12px;border:0;font-size:22px;font-weight:900;cursor:pointer}
-.step .m{background:#EEF1F6;color:var(--navy)}.step .p{background:var(--orange);color:#fff}
-.step output{min-width:34px;text-align:center;font-size:20px;font-weight:900;color:var(--navy)}
-.res{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.r{background:var(--soft);border-radius:16px;padding:14px}
-.r .v{font-size:28px;font-weight:900;color:var(--orange-d);line-height:1.05}
-.r .t{font-size:13px;font-weight:700;color:var(--navy);margin-top:2px}
-.r.full{grid-column:1/-1;background:var(--teal-soft)}.r.full .v{color:var(--teal)}
-.note{font-size:13px;color:var(--muted);margin-top:10px}
-ul.ck{list-style:none}
-ul.ck li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
-ul.ck li:last-child{border-bottom:0}
-ul.ck input{width:24px;height:24px;flex:none;accent-color:var(--teal);margin-top:1px}
-ul.ck label{flex:1;cursor:pointer}
-ul.ck input:checked+label{color:var(--muted);text-decoration:line-through}
-.prog{height:10px;background:#EEF1F6;border-radius:99px;overflow:hidden;margin:6px 0 4px}.prog i{display:block;height:100%;background:var(--teal);width:0;transition:width .3s}
-.seg{display:flex;gap:8px;margin-bottom:12px}
-.seg button{flex:1;padding:12px 6px;border-radius:12px;border:2px solid var(--line);background:#fff;font-weight:800;color:var(--navy);font-size:15px;cursor:pointer;min-height:44px}
-.seg button.on{border-color:var(--orange);background:var(--soft);color:var(--orange-d)}
-table{width:100%;border-collapse:collapse;font-size:15px}
-td{padding:9px 0;border-bottom:1px solid var(--line)}td.n{text-align:right;font-weight:800;white-space:nowrap;padding-left:10px}
-tr.tot td{border:0;font-weight:900;color:var(--navy);padding-top:12px}
-a.tel{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:14px;background:var(--navy);color:#fff;text-decoration:none;margin-bottom:10px;font-weight:800;min-height:56px}
-a.tel span{font-size:24px;color:#F6B98A}
-input[type=date],input[type=text]{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;font-size:16px;font-family:inherit;margin-top:6px}
-.btn{display:block;width:100%;text-align:center;background:var(--orange);color:#fff;font-weight:900;border:0;border-radius:14px;padding:15px;font-size:16px;cursor:pointer;text-decoration:none;min-height:50px}
-.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line)}
-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:9}
-nav button{flex:1;border:0;background:none;padding:10px 4px 12px;font-size:12px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-height:60px}
-nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-nav button.on{color:var(--orange-d)}
-#install{display:none;margin-bottom:14px}
-.hint{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+html,body{background:var(--paper)}
+body{font-family:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);font-size:16px;line-height:1.4;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+button{font-family:inherit}
+.wrap{max-width:520px;margin:0 auto}
+.view{display:none;min-height:100vh}.view.on{display:block}
+svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hero{position:relative;padding:calc(20px + env(safe-area-inset-top)) 20px 34px;text-align:center;color:#fff;overflow:hidden;background:linear-gradient(180deg,#0F1F3D 0%,#1C3560 42%,#B4532A 78%,#F39A4A 100%)}
+.hero .sun{position:absolute;left:50%;bottom:-70px;width:220px;height:220px;margin-left:-110px;border-radius:50%;background:radial-gradient(circle,#FFD58A 0%,#F7A24A 45%,rgba(247,162,74,0) 70%)}
+.hero .trees{position:absolute;left:0;right:0;bottom:0;width:100%;height:60px}
+.brand{position:relative;display:inline-flex;align-items:center;gap:10px}
+.brand .t1{font-weight:900;font-size:30px;line-height:.95;text-align:left}
+.brand .t2{font-weight:900;font-size:27px;line-height:1;color:var(--or)}
+.hero h1{position:relative;font-size:23px;font-weight:900;margin-top:18px}
+.hero p{position:relative;font-size:14px;color:#fff;margin-top:4px;text-shadow:0 1px 6px rgba(15,31,61,.7)}
+.top{background:var(--navy2);color:#fff;padding:calc(16px + env(safe-area-inset-top)) 18px 18px;position:relative}
+.top .bar{display:flex;align-items:center;gap:10px}
+.top h1{font-size:21px;font-weight:900;flex:1;text-align:center}
+.top p{text-align:center;color:#C9D3E6;font-size:13.5px;margin-top:4px}
+.ib{width:40px;height:40px;border-radius:12px;border:0;background:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.pad{padding:16px}
+.card{background:#fff;border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 1px 0 rgba(20,40,75,.04),0 8px 24px rgba(20,40,75,.06)}
+.card h2{font-size:17px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.lift{margin-top:-20px;position:relative;z-index:2}
+.pr{display:flex;align-items:center;gap:12px;padding:9px 0}
+.pr+.pr{border-top:1px solid var(--line)}
+.ic{width:40px;height:40px;border-radius:12px;background:var(--orsoft);color:var(--or2);display:flex;align-items:center;justify-content:center;flex:none}
+.pr .l{flex:1;min-width:0}.pr .l b{display:block;color:var(--navy);font-size:15.5px;line-height:1.2}.pr .l small{color:var(--muted);font-size:12.5px}
+.st{display:flex;align-items:center;gap:8px}
+.st button{width:38px;height:38px;border-radius:11px;border:0;font-size:22px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.st .m{background:#EEF1F6;color:var(--navy)}.st .p{background:linear-gradient(180deg,#F68A3C,#E8601C);color:#fff;box-shadow:0 4px 10px rgba(232,96,28,.35)}
+.st output{min-width:22px;text-align:center;font-size:19px;font-weight:900;color:var(--navy)}
+.days{display:flex;gap:8px;align-items:stretch;margin-top:8px}
+.days .cal{width:44px;border-radius:12px;background:var(--orsoft);color:var(--or2);display:flex;align-items:center;justify-content:center;flex:none}
+.days button{flex:1;border:2px solid var(--line);background:#fff;border-radius:14px;padding:8px 4px;cursor:pointer;color:var(--navy);min-height:52px}
+.days button b{display:block;font-size:16px}.days button small{font-size:11.5px;color:var(--muted)}
+.days button.on{background:linear-gradient(180deg,#F68A3C,#E8601C);border-color:transparent;color:#fff}.days button.on small{color:#FFE3CF}
+.cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:16px;padding:16px;font-size:17px;font-weight:900;color:#fff;cursor:pointer;background:linear-gradient(180deg,#F68A3C,#E8601C);box-shadow:0 10px 24px rgba(232,96,28,.35);min-height:56px}
+.cta .i{width:20px;height:20px}
+.dark{background:var(--navy2);color:#fff}
+.chip{display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(180deg,#FDEBDD,#FAD9BF);color:var(--navy);font-weight:900;font-size:18px;border-radius:16px;padding:12px;margin-bottom:14px}
+.chip .i{color:var(--or2)}
+.big{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.bc{background:linear-gradient(180deg,#1E3A68,#152B50);border:1.5px solid rgba(120,160,230,.35);border-radius:20px;padding:16px 10px;text-align:center}
+.bc .i{width:34px;height:34px;margin:0 auto 4px;display:block}
+.bc .lb{font-size:17px;font-weight:800}
+.bc .v{font-size:32px;font-weight:900;color:#FFB15C;line-height:1.05;margin:2px 0}
+.bc small{font-size:12px;color:#BFCBE2}
+.sm{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.sc{background:#fff;color:var(--navy);border-radius:16px;padding:12px 6px;text-align:center}
+.sc .ic{margin:0 auto 6px;width:36px;height:36px}
+.sc .lb{font-size:12px;font-weight:700;line-height:1.15;min-height:28px}
+.sc .v{font-size:26px;font-weight:900;color:var(--or2)}
+.sc small{display:block;font-size:10.5px;color:var(--muted)}
+.info{display:flex;gap:12px;align-items:flex-start;background:var(--bluesoft);color:var(--navy);border-radius:16px;padding:12px 14px;margin-bottom:12px;font-size:13.5px}
+.info .i{color:var(--blue);margin-top:1px}
+.ok{display:flex;gap:12px;align-items:center;background:var(--greensoft);color:#14532D;border-radius:16px;padding:14px;margin-bottom:14px}
+.ok .dot{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.ok b{display:block;font-size:16px;color:#0F3D24}.ok span{font-size:13px}
+.extra{background:rgba(255,255,255,.07);border-radius:16px;padding:12px 14px;margin-bottom:12px;font-size:14px;color:#E6ECF6;line-height:1.6}
+.extra b{color:#FFB15C}
+.progc{margin-top:-14px;position:relative;z-index:2}
+.progc .row{display:flex;justify-content:space-between;align-items:baseline}
+.progc b{color:var(--navy);font-size:16px}.progc .pct{font-weight:900;color:var(--navy);font-size:18px}
+.pb{height:12px;background:#EEF1F6;border-radius:99px;overflow:hidden;margin:8px 0 6px}.pb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2BB673,#22A06B);border-radius:99px;transition:width .35s}
+.progc small{display:block;text-align:right;color:var(--muted);font-size:12.5px}
+.acc{background:#fff;border-radius:18px;margin-bottom:10px;overflow:hidden;box-shadow:0 6px 18px rgba(20,40,75,.05)}
+.acc>button{width:100%;display:flex;align-items:center;gap:12px;border:0;background:none;padding:12px 14px;cursor:pointer;text-align:left;min-height:56px}
+.acc>button .ic{width:36px;height:36px}
+.acc>button b{flex:1;color:var(--navy);font-size:15.5px}.acc>button em{font-style:normal;color:var(--muted);font-weight:700;font-size:14px;margin-left:4px}
+.acc>button .chev{transition:transform .2s;color:var(--navy)}
+.acc.open>button .chev{transform:rotate(180deg)}
+.acc.open>button{background:var(--bluesoft)}
+.acc ul{list-style:none;display:none;padding:4px 14px 10px}
+.acc.open ul{display:block}
+.acc li{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.acc li:first-child{border-top:0}
+.cb{width:26px;height:26px;border-radius:7px;border:2px solid #B9C2D0;display:flex;align-items:center;justify-content:center;flex:none;background:#fff}
+.cb .i{width:18px;height:18px;color:#fff;opacity:0}
+li.done .cb{background:var(--green);border-color:var(--green)}li.done .cb .i{opacity:1}
+.acc li span.t{flex:1;color:var(--ink);font-size:15px}
+.tabs{display:flex;gap:8px;margin-top:-14px;position:relative;z-index:2}
+.tabs button{flex:1;border:0;border-radius:14px;padding:10px 4px;background:#fff;color:var(--navy);cursor:pointer;box-shadow:0 6px 16px rgba(20,40,75,.08);min-height:56px}
+.tabs button b{display:block;font-size:15px}.tabs button small{font-size:11.5px;color:var(--muted)}
+.tabs button.on{background:linear-gradient(180deg,#F68A3C,#E8601C);color:#fff}.tabs button.on small{color:#FFE3CF}
+.lh{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.lh .i{color:var(--or2);width:30px;height:30px}
+.lh b{display:block;color:var(--navy);font-size:17px}.lh small{color:var(--muted)}
+.thead{display:grid;grid-template-columns:1fr 82px 60px;gap:6px;background:#EEF2F8;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:800;color:var(--navy)}
+.it{display:grid;grid-template-columns:32px 1fr 82px 60px;gap:6px;align-items:center;padding:10px;border-bottom:1px solid var(--line);font-size:14px}
+.it .ic{width:32px;height:32px;border-radius:10px}.it .ic .i{width:18px;height:18px}
+.it .q{text-align:center;color:var(--muted);font-size:13px}.it .v{text-align:right;font-weight:900;color:var(--navy)}
+.tot{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#FFF1DA,#FFE2B8);border-radius:14px;padding:12px 14px;margin-top:12px}
+.tot b{color:var(--navy);font-size:16px;display:flex;align-items:center;gap:8px}.tot .v{font-size:26px;font-weight:900;color:var(--or2)}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px;display:flex;gap:8px;align-items:flex-start}
+.pc{display:flex;gap:12px;align-items:flex-start}
+.pc .ic{width:42px;height:42px}
+.pc .body{flex:1;min-width:0}
+.pc b{color:var(--navy);font-size:16px;display:block}
+.pc input,.pc textarea{width:100%;border:0;background:#F6F4F0;border-radius:10px;padding:10px;font-size:15px;font-family:inherit;color:var(--ink);margin-top:6px;resize:vertical}
+.em a{color:var(--navy);text-decoration:none;font-weight:600;padding:5px 0;display:flex;justify-content:space-between;font-size:15px}
+.em a span{font-weight:900;color:var(--or2)}
+.tip{display:flex;gap:12px;align-items:flex-start;background:var(--greensoft);border-radius:16px;padding:14px;color:#14532D;font-size:14px}
+.tip .i{color:var(--green)}
+.ml a,.ml button{display:flex;align-items:center;gap:12px;width:100%;padding:14px 4px;border:0;border-top:1px solid var(--line);background:none;text-decoration:none;color:var(--navy);font-weight:800;font-size:15.5px;cursor:pointer;text-align:left;min-height:56px}
+.ml>:first-child{border-top:0}
+.ml .ic{width:38px;height:38px}
+.ml small{display:block;color:var(--muted);font-weight:500;font-size:12.5px}
+.ml .grow{flex:1}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav .wrap{display:flex;padding:6px 6px 8px;gap:4px}
+nav button{flex:1;border:0;background:none;border-radius:14px;padding:7px 2px;font-size:11.5px;font-weight:700;color:#6B7487;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-height:54px}
+nav button .i{width:22px;height:22px}
+nav button.on{background:linear-gradient(180deg,#F68A3C,#E8601C);color:#fff;box-shadow:0 6px 14px rgba(232,96,28,.3)}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:30;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
 </style>
 </head>
 <body>
-<header>
-  <div class="k">KIT 72H SEM PÂNICO</div>
-  <h1 id="title">Calculadora Inteligente</h1>
-  <p id="sub">Descubra o que a sua família precisa para 72 horas.</p>
-</header>
-<main>
 
-<div id="install" class="card">
-  <b style="color:var(--navy)">Instale o app no seu celular</b>
-  <p class="note" style="margin:4px 0 10px">Ele fica na tela inicial e funciona até sem internet.</p>
-  <button class="btn" id="installBtn">Instalar o app</button>
-</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="i-house" viewBox="0 0 64 48"><path d="M6 24 32 4l26 20" fill="none" stroke="#F07A2A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><g fill="#fff" stroke="none"><circle cx="24" cy="22" r="3.4"/><path d="M19 44V31a5 5 0 0 1 10 0v13z"/><circle cx="40" cy="22" r="3.4"/><path d="M35 44V31a5 5 0 0 1 10 0v13z"/><circle cx="14" cy="30" r="2.6"/><path d="M10.5 44v-8a3.5 3.5 0 0 1 7 0v8z"/><circle cx="50" cy="30" r="2.6"/><path d="M46.5 44v-8a3.5 3.5 0 0 1 7 0v8z"/></g></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></symbol>
+  <symbol id="i-child" viewBox="0 0 24 24"><circle cx="12" cy="6" r="3"/><path d="M8 21v-5l-2-3 4-2h4l4 2-2 3v5"/></symbol>
+  <symbol id="i-baby" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9 11h.01M15 11h.01M9.5 15a3.5 3.5 0 0 0 5 0M12 4a2 2 0 0 1 2 2"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><path d="M10.5 20.5a5 5 0 0 1-7-7l9-9a5 5 0 0 1 7 7z"/><path d="M8.5 8.5l7 7"/></symbol>
+  <symbol id="i-paw" viewBox="0 0 24 24"><circle cx="5.5" cy="10" r="2"/><circle cx="9.5" cy="5.5" r="2"/><circle cx="14.5" cy="5.5" r="2"/><circle cx="18.5" cy="10" r="2"/><path d="M12 12c-3 0-6 3.5-6 6a2.5 2.5 0 0 0 3 2.4c1-.3 2-.9 3-.9s2 .6 3 .9a2.5 2.5 0 0 0 3-2.4c0-2.5-3-6-6-6z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></symbol>
+  <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h4"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7s-6.5 7.3-6.5 12a6.5 6.5 0 0 0 13 0c0-4.7-6.5-12-6.5-12z"/></symbol>
+  <symbol id="i-fork" viewBox="0 0 24 24"><path d="M7 2v8a2 2 0 0 0 2 2v10M11 2v8M5 2v8M17 2c-1.7 1-3 3.5-3 7 0 2 1 3 3 3v10"/></symbol>
+  <symbol id="i-can" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="7" ry="2.5"/><path d="M5 5v14c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V5M5 10c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/></symbol>
+  <symbol id="i-cookie" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M8 9h.01M12 9h.01M16 9h.01M8 13h.01M12 13h.01M16 13h.01"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-checklist" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-plan" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V16h8v-1.3A7 7 0 0 0 12 2z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-water" viewBox="0 0 24 24"><path d="M9 2h6M10 2v3l-2 3v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8l-2-3V2"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 11v2M10 11v2"/></symbol>
+  <symbol id="i-corn" viewBox="0 0 24 24"><path d="M12 2c3 2 4 6 4 10s-1.5 8-4 10c-2.5-2-4-6-4-10s1-8 4-10z"/><path d="M10 7h4M9.5 11h5M10 15h4"/></symbol>
+  <symbol id="i-zip" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9h16"/></symbol>
+  <symbol id="i-light" viewBox="0 0 24 24"><path d="M8 2h8l-1 6H9z"/><rect x="7" y="8" width="10" height="12" rx="3"/><path d="M12 12v4"/></symbol>
+  <symbol id="i-blanket" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM3 10h18M3 14h18"/></symbol>
+ </defs>
+</svg>
 
-<!-- CALCULAR -->
 <section class="view on" id="v-calc">
-  <div class="card">
-    <h2>Quem mora na sua casa?</h2>
-    <div class="row"><div class="l"><b>Adultos</b><small>a partir de 12 anos</small></div><div class="step" data-k="adultos"></div></div>
-    <div class="row"><div class="l"><b>Crianças</b><small>de 2 a 11 anos</small></div><div class="step" data-k="criancas"></div></div>
-    <div class="row"><div class="l"><b>Bebês</b><small>até 2 anos</small></div><div class="step" data-k="bebes"></div></div>
-    <div class="row"><div class="l"><b>Idosos com remédio contínuo</b><small>já contados acima</small></div><div class="step" data-k="idosos"></div></div>
-    <div class="row"><div class="l"><b>Cães e gatos</b></div><div class="step" data-k="pets"></div></div>
+  <div class="hero">
+    <div class="sun"></div>
+    <svg class="trees" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path fill="#0E1B33" d="M0 60V40l14-14 10 10 12-20 12 22 10-8 14 14 18-24 14 20 12-12 16 16 20-10 18 14 22-20 16 18 14-8 18 12 20-22 16 20 12-10 18 16 22-16 16 14 14-8 16 12V60z"/></svg>
+    <div class="brand"><svg width="64" height="48" aria-hidden="true"><use href="#i-house"/></svg><div><div class="t1">Kit 72h</div><div class="t2">Sem Pânico</div></div></div>
+    <h1>Calculadora Inteligente</h1>
+    <p>Descubra o que sua família precisa para 72 horas (3 dias)</p>
   </div>
-  <div class="card">
-    <div class="row"><div class="l"><b>Por quantos dias?</b><small>a Defesa Civil recomenda 3 dias (72 horas)</small></div><div class="step" data-k="dias"></div></div>
-  </div>
-  <div class="card">
-    <h2 id="resTitle">Sua necessidade para 72 horas</h2>
-    <div class="res" id="res"></div>
-    <p class="note">Água: 2 litros por pessoa por dia para beber, referência da Defesa Civil. Se tiver espaço, guarde mais para higiene e cozinha. Quantidades de comida são uma sugestão prática para 3 refeições por dia.</p>
-  </div>
-  <button class="btn" data-go="compras">Ver minha lista de compras</button>
-</section>
-
-<!-- CHECKLIST -->
-<section class="view" id="v-check">
-  <div class="card">
-    <h2>Meu kit</h2>
-    <div class="prog"><i id="progbar"></i></div>
-    <p class="note" id="progtxt" style="margin-top:0"></p>
-  </div>
-  <div id="checklists"></div>
-  <button class="btn ghost" id="resetCk">Desmarcar tudo</button>
-</section>
-
-<!-- COMPRAS -->
-<section class="view" id="v-compras">
-  <div class="card">
-    <h2>Lista de compras por orçamento</h2>
-    <div class="seg" id="budget">
-      <button data-b="100" class="on">Até R$ 100</button><button data-b="200">Até R$ 200</button><button data-b="300">Até R$ 300</button>
+  <div class="wrap pad">
+    <div class="card lift">
+      <h2>Quem mora na sua casa?</h2>
+      <div class="pr"><span class="ic"><svg class="i"><use href="#i-user"/></svg></span><div class="l"><b>Adultos</b><small>(a partir de 12 anos)</small></div><div class="st" data-k="adultos"></div></div>
+      <div class="pr"><span class="ic"><svg class="i"><use href="#i-child"/></svg></span><div class="l"><b>Crianças</b><small>(2 a 11 anos)</small></div><div class="st" data-k="criancas"></div></div>
+      <div class="pr"><span class="ic"><svg class="i"><use href="#i-baby"/></svg></span><div class="l"><b>Bebês</b><small>(até 2 anos)</small></div><div class="st" data-k="bebes"></div></div>
+      <div class="pr"><span class="ic"><svg class="i"><use href="#i-pill"/></svg></span><div class="l"><b>Idosos com remédio contínuo</b><small>(já contados acima)</small></div><div class="st" data-k="idosos"></div></div>
+      <div class="pr"><span class="ic"><svg class="i"><use href="#i-paw"/></svg></span><div class="l"><b>Cães e gatos</b></div><div class="st" data-k="pets"></div></div>
     </div>
-    <table id="shop"></table>
-    <p class="note" id="shopnote"></p>
+    <div class="card">
+      <h2>Por quantos dias?</h2>
+      <div class="days" id="days">
+        <span class="cal"><svg class="i"><use href="#i-cal"/></svg></span>
+        <button data-d="3"><b>3 dias</b><small>(72 horas)</small></button>
+        <button data-d="2"><b>2 dias</b><small>(48 horas)</small></button>
+        <button data-d="5"><b>5 dias</b><small>(120 horas)</small></button>
+      </div>
+    </div>
+    <button class="cta" data-go="res"><svg class="i"><use href="#i-calc"/></svg>Calcular meu kit<svg class="i"><use href="#i-arrow"/></svg></button>
   </div>
 </section>
 
-<!-- EMERGÊNCIA -->
-<section class="view" id="v-sos">
-  <div class="card">
-    <h2>Números de emergência</h2>
-    <a class="tel" href="tel:199">Defesa Civil <span>199</span></a>
-    <a class="tel" href="tel:193">Corpo de Bombeiros <span>193</span></a>
-    <a class="tel" href="tel:192">SAMU <span>192</span></a>
-    <a class="tel" href="tel:190">Polícia Militar <span>190</span></a>
-    <p class="note">Receba alertas grátis da Defesa Civil: mande o CEP da sua casa por SMS para <b>40199</b>.</p>
-  </div>
-  <div class="card">
-    <h2>Plano da família</h2>
-    <label class="note">Ponto de encontro<input type="text" data-save="encontro" placeholder="Ex.: praça em frente à escola"></label>
-    <label class="note" style="display:block;margin-top:10px">Contato de um parente<input type="text" data-save="contato" placeholder="Nome e telefone"></label>
-    <label class="note" style="display:block;margin-top:10px">Onde fica o kit<input type="text" data-save="local" placeholder="Ex.: armário do corredor, prateleira alta"></label>
-  </div>
-  <div class="card">
-    <h2>Próxima revisão do kit</h2>
-    <p class="note" style="margin:0">Revise a cada 6 meses: validade, água guardada, pilhas e remédios.</p>
-    <input type="date" data-save="revisao">
+<section class="view dark" id="v-res">
+  <div class="top"><div class="bar"><button class="ib" data-go="calc" aria-label="Voltar"><svg class="i"><use href="#i-back"/></svg></button><h1>Resultado do seu Kit 72h</h1><button class="ib" id="share" aria-label="Compartilhar"><svg class="i"><use href="#i-share"/></svg></button></div></div>
+  <div class="wrap pad">
+    <div class="chip"><svg class="i"><use href="#i-users"/></svg><span id="chipTxt"></span></div>
+    <div class="big">
+      <div class="bc"><svg class="i" style="color:#5AA9FF"><use href="#i-drop"/></svg><div class="lb">Água</div><div class="v" id="rAgua"></div><small>(2 L por pessoa/dia)</small></div>
+      <div class="bc"><svg class="i" style="color:#fff"><use href="#i-fork"/></svg><div class="lb">Refeições</div><div class="v" id="rRef"></div><small>(3 por pessoa/dia)</small></div>
+    </div>
+    <div class="sm">
+      <div class="sc"><span class="ic"><svg class="i"><use href="#i-can"/></svg></span><div class="lb">Latas de proteína</div><div class="v" id="rLat"></div></div>
+      <div class="sc"><span class="ic"><svg class="i"><use href="#i-cookie"/></svg></span><div class="lb">Pacotes de biscoito</div><div class="v" id="rBis"></div></div>
+      <div class="sc"><span class="ic"><svg class="i"><use href="#i-bag"/></svg></span><div class="lb">Lanches</div><div class="v" id="rLan"></div><small>(barras, frutas secas)</small></div>
+    </div>
+    <div id="rExtra"></div>
+    <div class="info"><svg class="i"><use href="#i-info"/></svg><div><b>Referência da Defesa Civil:</b> 2 litros de água por pessoa por dia, para beber. Se tiver espaço, guarde mais para higiene e cozinha.</div></div>
+    <div class="ok"><span class="dot"><svg class="i"><use href="#i-check"/></svg></span><div><b>Seu kit está dimensionado!</b><span>Agora veja o checklist e as listas de compras para se organizar.</span></div></div>
+    <button class="cta" data-go="check">Ver checklist do kit<svg class="i"><use href="#i-arrow"/></svg></button>
   </div>
 </section>
 
-</main>
+<section class="view" id="v-check">
+  <div class="top"><div class="bar"><span class="ib"><svg class="i" style="color:var(--or)"><use href="#i-checklist"/></svg></span><h1>Checklist do Kit 72h</h1><span class="ib"></span></div><p>Marque o que você já tem pronto.</p><div style="height:14px"></div></div>
+  <div class="wrap pad">
+    <div class="card progc"><div class="row"><b>Progresso do seu kit</b><span class="pct" id="pct">0%</span></div><div class="pb"><i id="pbar"></i></div><small id="ptxt"></small></div>
+    <div id="groups"></div>
+  </div>
+</section>
 
-<nav>
-  <button class="on" data-go="calc"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8"/></svg>Calcular</button>
-  <button data-go="check"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Checklist</button>
-  <button data-go="compras"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>Compras</button>
-  <button data-go="sos"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Emergência</button>
-</nav>
+<section class="view" id="v-compras">
+  <div class="top"><div class="bar"><button class="ib" data-go="calc" aria-label="Voltar"><svg class="i"><use href="#i-back"/></svg></button><h1>Listas de compras</h1><span class="ib"></span></div><p>Escolha o orçamento que cabe no seu bolso.</p><div style="height:14px"></div></div>
+  <div class="wrap pad">
+    <div class="tabs" id="tabs">
+      <button data-b="100"><b>Até R$ 100</b><small>Essencial</small></button>
+      <button data-b="200"><b>Até R$ 200</b><small>Intermediário</small></button>
+      <button data-b="300"><b>Até R$ 300</b><small>Completo</small></button>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="lh"><svg class="i"><use href="#i-cart"/></svg><div><b id="lTitle"></b><small id="lSub"></small></div></div>
+      <div class="thead"><span>Item</span><span style="text-align:center">Qtde.</span><span style="text-align:right">Valor</span></div>
+      <div id="items"></div>
+      <div class="tot"><b><svg class="i" style="color:var(--or2)"><use href="#i-cart"/></svg>Total estimado</b><span class="v" id="total"></span></div>
+      <div class="note"><svg class="i" style="width:18px;height:18px"><use href="#i-info"/></svg><span id="lNote"></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-plano">
+  <div class="top"><div class="bar"><span class="ib"><svg class="i" style="color:var(--or)"><use href="#i-home"/></svg></span><h1>Plano da família</h1><span class="ib"></span></div><p>Organize as informações importantes para um imprevisto.</p></div>
+  <div class="wrap pad">
+    <div class="card"><div class="pc"><span class="ic"><svg class="i"><use href="#i-msg"/></svg></span><div class="body"><b>Contatos de emergência</b>
+      <div class="em">
+        <a href="tel:199">Defesa Civil <span>199</span></a>
+        <a href="tel:193">Bombeiros <span>193</span></a>
+        <a href="tel:192">SAMU <span>192</span></a>
+        <a href="tel:190">Polícia Militar <span>190</span></a>
+      </div></div></div></div>
+    <div class="card"><div class="pc"><span class="ic"><svg class="i"><use href="#i-map"/></svg></span><div class="body"><b>Ponto de encontro</b><input data-save="encontro" placeholder="Ex.: praça em frente à escola"></div></div></div>
+    <div class="card"><div class="pc"><span class="ic"><svg class="i"><use href="#i-users"/></svg></span><div class="body"><b>Contatos da família</b><input data-save="contato1" placeholder="Nome e telefone"><input data-save="contato2" placeholder="Nome e telefone"></div></div></div>
+    <div class="card"><div class="pc"><span class="ic"><svg class="i"><use href="#i-home"/></svg></span><div class="body"><b>Onde fica o kit</b><input data-save="local" placeholder="Ex.: armário do corredor"></div></div></div>
+    <div class="card"><div class="pc"><span class="ic"><svg class="i"><use href="#i-plan"/></svg></span><div class="body"><b>Observações importantes</b><textarea data-save="obs" rows="3" placeholder="Ex.: medicamentos, alergias, etc."></textarea></div></div></div>
+    <div class="tip"><svg class="i"><use href="#i-bulb"/></svg><div><b>Dica:</b> mantenha este plano impresso junto ao seu kit e compartilhe com toda a família.</div></div>
+  </div>
+</section>
+
+<section class="view" id="v-mais">
+  <div class="top"><div class="bar"><span class="ib"></span><h1>Mais</h1><span class="ib"></span></div><p>Alertas, revisão do kit e instalação.</p></div>
+  <div class="wrap pad">
+    <div class="card ml">
+      <button id="installBtn"><span class="ic"><svg class="i"><use href="#i-download"/></svg></span><span class="grow">Instalar o app<small id="installTxt">Fica na tela inicial e funciona sem internet</small></span></button>
+      <a href="sms:40199"><span class="ic"><svg class="i"><use href="#i-msg"/></svg></span><span class="grow">Alertas grátis da Defesa Civil<small>Mande o CEP da sua casa por SMS para 40199</small></span></a>
+      <div style="border-top:1px solid var(--line);padding:14px 4px"><div style="display:flex;gap:12px;align-items:center"><span class="ic"><svg class="i"><use href="#i-clock"/></svg></span><span class="grow" style="font-weight:800;color:var(--navy)">Próxima revisão do kit<small style="display:block;color:var(--muted);font-weight:500">A cada 6 meses: validade, água, pilhas e remédios</small></span></div><input type="date" data-save="revisao" style="width:100%;margin-top:10px;border:0;background:#F6F4F0;border-radius:10px;padding:10px;font-size:15px;font-family:inherit"></div>
+      <button id="resetCk"><span class="ic"><svg class="i"><use href="#i-checklist"/></svg></span><span class="grow">Recomeçar o checklist<small>Desmarca todos os itens</small></span></button>
+    </div>
+    <p class="note" style="justify-content:center;text-align:center">Material educativo. Não substitui as orientações da Defesa Civil, do Corpo de Bombeiros ou de profissionais de saúde.</p>
+  </div>
+</section>
+
+<nav><div class="wrap">
+  <button class="on" data-go="calc"><svg class="i"><use href="#i-calc"/></svg>Calcular</button>
+  <button data-go="check"><svg class="i"><use href="#i-checklist"/></svg>Checklist</button>
+  <button data-go="compras"><svg class="i"><use href="#i-cart"/></svg>Compras</button>
+  <button data-go="plano"><svg class="i"><use href="#i-plan"/></svg>Plano</button>
+  <button data-go="mais"><svg class="i"><use href="#i-dots"/></svg>Mais</button>
+</div></nav>
+<div class="toast" id="toast"></div>
 
 <script>
-var store={get:function(k,d){try{var v=localStorage.getItem('k72_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('k72_'+k,JSON.stringify(v))}catch(e){}}};
-var fam=store.get('fam',{adultos:2,criancas:2,bebes:0,idosos:0,pets:0});if(!fam.dias)fam.dias=3;
-var lim={adultos:[1,12],criancas:[0,10],bebes:[0,5],idosos:[0,6],pets:[0,6],dias:[1,7]};
+var S={get:function(k,d){try{var v=localStorage.getItem('k72_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('k72_'+k,JSON.stringify(v))}catch(e){}}};
+var fam=S.get('fam',{adultos:2,criancas:2,bebes:0,idosos:0,pets:0,dias:3});
+['adultos','criancas','bebes','idosos','pets'].forEach(function(k){if(typeof fam[k]!=='number')fam[k]=k==='adultos'?1:0});
+if([2,3,5].indexOf(fam.dias)<0)fam.dias=3;
+var lim={adultos:[1,12],criancas:[0,10],bebes:[0,5],idosos:[0,6],pets:[0,6]};
+function toast(t){var e=document.getElementById('toast');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},2200)}
+function ic(n){return '<svg class="i"><use href="#i-'+n+'"/></svg>'}
+function pl(n,a,b){return n+' '+(n===1?a:b)}
 
-document.querySelectorAll('.step').forEach(function(s){
-  var k=s.dataset.k;
-  s.innerHTML='<button class="m" aria-label="Diminuir">−</button><output></output><button class="p" aria-label="Aumentar">+</button>';
-  var o=s.querySelector('output');
-  function draw(){o.textContent=fam[k]}
-  s.querySelector('.m').onclick=function(){fam[k]=Math.max(lim[k][0],fam[k]-1);draw();upd()};
-  s.querySelector('.p').onclick=function(){fam[k]=Math.min(lim[k][1],fam[k]+1);draw();upd()};
-  draw();
+document.querySelectorAll('.st').forEach(function(s){
+  var k=s.dataset.k;s.innerHTML='<button class="m" aria-label="Diminuir">−</button><output></output><button class="p" aria-label="Aumentar">+</button>';
+  var o=s.querySelector('output');function d(){o.textContent=fam[k]}
+  s.querySelector('.m').onclick=function(){fam[k]=Math.max(lim[k][0],fam[k]-1);d();save()};
+  s.querySelector('.p').onclick=function(){fam[k]=Math.min(lim[k][1],fam[k]+1);d();save()};d();
 });
+function drawDays(){document.querySelectorAll('#days button').forEach(function(b){b.classList.toggle('on',+b.dataset.d===fam.dias)})}
+document.querySelectorAll('#days button').forEach(function(b){b.onclick=function(){fam.dias=+b.dataset.d;drawDays();save()}});drawDays();
 
-function pessoas(){return fam.adultos+fam.criancas+fam.bebes}
-function upd(){
-  store.set('fam',fam);
-  var p=pessoas();
-  var d=fam.dias, q=fam.adultos+fam.criancas;
-  var agua=p*2*d, ref=p*3*d, latas=q*d, bisc=Math.ceil(q*d*0.5), lanches=q*2*d;
-  document.getElementById('resTitle').textContent='Resultado para '+p+(p===1?' pessoa':' pessoas')+' por '+d+(d===1?' dia':' dias');
-  var h='';
-  h+=box(agua+' L','Água para beber',true);
-  h+=box(ref,'Refeições');
-  h+=box(latas,'Latas de proteína');
-  h+=box(bisc,'Pacotes de biscoito');
-  h+=box(lanches,'Lanches (barras, frutas secas)');
-  if(fam.bebes) h+=box(fam.bebes*8*d,'Fraldas (8 por dia)');
-  if(fam.idosos) h+=box(fam.idosos,'Kit de remédios + receitas');
-  if(fam.pets) h+=box(fam.pets,'Pet(s): ração para '+d+(d===1?' dia':' dias')+' + água extra');
-  document.getElementById('res').innerHTML=h;
-  buildChecklists(); buildShop();
+function calc(){var p=fam.adultos+fam.criancas+fam.bebes,q=fam.adultos+fam.criancas,d=fam.dias;
+  return{p:p,d:d,agua:p*2*d,ref:p*3*d,latas:q*d,bisc:Math.ceil(q*d*0.5),lan:q*2*d,fraldas:fam.bebes*8*d}}
+function save(){S.set('fam',fam);render()}
+function render(){var c=calc();
+  document.getElementById('chipTxt').textContent=pl(c.p,'pessoa','pessoas')+' por '+pl(c.d,'dia','dias');
+  document.getElementById('rAgua').textContent=c.agua+' litros';
+  document.getElementById('rRef').textContent=c.ref;
+  document.getElementById('rLat').textContent=c.latas;
+  document.getElementById('rBis').textContent=c.bisc;
+  document.getElementById('rLan').textContent=c.lan;
+  var ex=[];
+  if(fam.bebes)ex.push('<b>'+c.fraldas+' fraldas</b> para '+(fam.bebes>1?'os bebês':'o bebê')+' (8 por dia)');
+  if(fam.idosos)ex.push('<b>Remédios de uso contínuo</b> separados para '+pl(fam.idosos,'idoso','idosos')+', com as receitas');
+  if(fam.pets)ex.push('<b>Ração para '+pl(c.d,'dia','dias')+'</b> e água extra para '+(fam.pets>1?'os pets':'o pet'));
+  document.getElementById('rExtra').innerHTML=ex.length?'<div class="extra">'+ex.join('<br>')+'</div>':'';
+  buildCheck();buildShop();
 }
-function box(v,t,full){return '<div class="r'+(full?' full':'')+'"><div class="v">'+v+'</div><div class="t">'+t+'</div></div>'}
 
-var CK=[
- ['Água e comida',['Água para beber (veja o total na calculadora)','Enlatados que se comem frios','Biscoitos, torradas ou pão de forma','Barras de cereal, castanhas ou frutas secas','Leite UHT ou em pó','Abridor de lata manual']],
- ['Saúde',['Remédios de uso contínuo + receitas','Analgésico e antitérmico de costume','Gaze, esparadrapo, curativos e antisséptico','Soro fisiológico','Álcool em gel']],
- ['Luz e comunicação',['Lanterna ou lâmpada LED recarregável','Pilhas reserva','Carregador portátil carregado','Rádio a pilha','Contatos escritos em papel','Apito']],
- ['Higiene e abrigo',['Sabonete, pasta e escova de dente','Sacos de lixo','Manta térmica ou cobertor leve','Uma muda de roupa por pessoa','Capa de chuva']],
- ['Documentos e dinheiro',['RG, CPF e certidões em saco com fecho','Cartão do SUS e de vacina','Dinheiro em espécie (notas pequenas)','Foto dos documentos no celular']]
-];
-function extra(){var e=[];if(fam.bebes)e.push(['Bebês',['Fraldas para 3 dias','Lenços umedecidos e pomada','Leite ou fórmula de costume','Mamadeiras limpas']]);if(fam.pets)e.push(['Pets',['Ração para 3 dias','Água extra para o pet','Coleira, guia e caixa de transporte','Carteira de vacina do pet']]);return e}
-var done=store.get('done',{});
-function buildChecklists(){
-  var all=CK.concat(extra()),h='',tot=0,ok=0;
-  all.forEach(function(g,gi){h+='<div class="card"><h2>'+g[0]+'</h2><ul class="ck">';g[1].forEach(function(it,ii){var id=g[0]+'|'+it;tot++;if(done[id])ok++;h+='<li><input type="checkbox" id="c'+gi+'_'+ii+'" data-id="'+id.replace(/"/g,'')+'"'+(done[id]?' checked':'')+'><label for="c'+gi+'_'+ii+'">'+it+'</label></li>'});h+='</ul></div>'});
-  var c=document.getElementById('checklists');c.innerHTML=h;
-  c.querySelectorAll('input').forEach(function(i){i.onchange=function(){done[i.dataset.id]=i.checked;store.set('done',done);prog()}});
-  prog();
-  function prog(){var t=0,o=0;c.querySelectorAll('input').forEach(function(i){t++;if(i.checked)o++});document.getElementById('progbar').style.width=(t?o/t*100:0)+'%';document.getElementById('progtxt').textContent=o+' de '+t+' itens prontos';}
+var done=S.get('done',{}),openG=S.get('openG','agua');
+function groups(c){var g=[
+ {id:'agua',t:'Água e alimentação',i:'drop',it:['Água potável ('+c.agua+' litros)','Alimentos não perecíveis ('+c.ref+' refeições)','Latas de proteína ('+c.latas+')','Biscoitos ('+c.bisc+' pacotes)','Lanches práticos ('+c.lan+')','Abridor de lata manual']},
+ {id:'energia',t:'Energia e comunicação',i:'bolt',it:['Lanterna ou lâmpada LED recarregável','Pilhas reserva','Carregador portátil carregado','Rádio a pilha','Apito']},
+ {id:'saude',t:'Saúde e primeiros socorros',i:'plus',it:['Remédios de uso contínuo + receitas','Analgésico e antitérmico de costume','Gaze, esparadrapo e curativos','Antisséptico e soro fisiológico','Álcool em gel']},
+ {id:'higiene',t:'Higiene e bem-estar',i:'home',it:['Sabonete, pasta e escova de dente','Absorventes e lenços umedecidos','Sacos de lixo','Manta térmica ou cobertor leve','Uma muda de roupa por pessoa']},
+ {id:'docs',t:'Documentos e outros',i:'folder',it:['RG, CPF e certidões em saco com fecho','Cartão do SUS e de vacina','Dinheiro em espécie (notas pequenas)','Contatos escritos em papel','Foto dos documentos no celular','Capa de chuva']}];
+ if(fam.bebes)g.push({id:'bebes',t:'Bebês',i:'baby',it:['Fraldas ('+c.fraldas+')','Leite ou fórmula de costume','Mamadeiras limpas','Pomada e lenços']});
+ if(fam.pets)g.push({id:'pets',t:'Pets',i:'paw',it:['Ração para '+pl(c.d,'dia','dias'),'Água extra para o pet','Coleira, guia e caixa de transporte','Carteira de vacina do pet']});
+ return g}
+function buildCheck(){var c=calc(),G=groups(c),h='',tot=0,ok=0;
+  G.forEach(function(g){var n=0;g.it.forEach(function(x,i){if(done[g.id+i])n++});tot+=g.it.length;ok+=n;
+   h+='<div class="acc'+(openG===g.id?' open':'')+'" data-g="'+g.id+'"><button><span class="ic">'+ic(g.i)+'</span><b>'+g.t+'<em>('+n+'/'+g.it.length+')</em></b><svg class="i chev"><use href="#i-chev"/></svg></button><ul>';
+   g.it.forEach(function(x,i){var k=g.id+i;h+='<li class="'+(done[k]?'done':'')+'" data-k="'+k+'"><span class="cb">'+ic('check')+'</span><span class="t">'+x+'</span></li>'});h+='</ul></div>'});
+  var el=document.getElementById('groups');el.innerHTML=h;
+  var pc=tot?Math.round(ok/tot*100):0;document.getElementById('pct').textContent=pc+'%';document.getElementById('pbar').style.width=pc+'%';document.getElementById('ptxt').textContent=ok+' de '+tot+' itens';
+  el.querySelectorAll('.acc>button').forEach(function(b){b.onclick=function(){var id=b.parentNode.dataset.g;openG=(openG===id?'':id);S.set('openG',openG);buildCheck()}});
+  el.querySelectorAll('li').forEach(function(li){li.onclick=function(){var k=li.dataset.k;done[k]=!done[k];S.set('done',done);buildCheck()}});
 }
-document.getElementById('resetCk').onclick=function(){done={};store.set('done',done);buildChecklists()};
+document.getElementById('resetCk').onclick=function(){done={};S.set('done',done);buildCheck();toast('Checklist recomeçado')};
 
-var LISTS={
- 100:[['3 galões de água 5 L',30],['4 latas de sardinha ou atum',24],['2 pacotes de cream cracker',10],['1 caixa de barra de cereal',9],['1 lata de milho',5],['4 pilhas AA',15],['Sacos com fecho',6]],
- 200:[['Tudo da lista de R$ 100',99],['Lâmpada LED recarregável',45],['Itens de farmácia (gaze, esparadrapo, antisséptico, soro)',35],['2 latas de feijão pronto',14]],
- 300:[['Tudo da lista de R$ 200',193],['Carregador portátil 10.000 mAh',60],['2 mantas térmicas',24],['Castanhas ou frutas secas',15],['Apito',8]]
-};
-var bud=store.get('bud',100);
-function buildShop(){
-  var L=LISTS[bud],t=0,h='';
-  L.forEach(function(r){t+=r[1];h+='<tr><td>'+r[0]+'</td><td class="n">≈ R$ '+r[1]+'</td></tr>'});
-  h+='<tr class="tot"><td>Total para 2 pessoas</td><td class="n">≈ R$ '+t+'</td></tr>';
-  document.getElementById('shop').innerHTML=h;
-  var p=pessoas();
-  document.getElementById('shopnote').textContent='Lista pensada para 2 pessoas. Sua casa tem '+p+(p===1?' pessoa':' pessoas')+': para '+fam.dias+(fam.dias===1?' dia':' dias')+', você precisa de '+(p*2*fam.dias)+' litros de água no total. Preços aproximados de referência (nov/2026); variam por cidade e loja.';
-  document.querySelectorAll('#budget button').forEach(function(b){b.classList.toggle('on',+b.dataset.b===bud)});
+var L={100:{t:'Lista Essencial – até R$ 100',s:'O básico para começar.',it:[['water','Água (5 L)','3 galões',30],['can','Sardinha ou atum','4 latas',24],['cookie','Cream cracker','2 pacotes',10],['bag','Barra de cereal','1 caixa',9],['corn','Milho em conserva','1 lata',5],['battery','Pilhas AA','4 unid.',15],['zip','Sacos com fecho','1 pacote',6]]},
+ 200:{t:'Lista Intermediária – até R$ 200',s:'Mais luz e primeiros socorros.',it:[['cart','Tudo da lista Essencial','—',99],['light','Lâmpada LED recarregável','1 unid.',45],['plus','Itens de farmácia (gaze, esparadrapo, antisséptico, soro)','1 kit',35],['can','Feijão pronto','2 latas',14]]},
+ 300:{t:'Lista Completa – até R$ 300',s:'Kit completo e confortável.',it:[['cart','Tudo da lista Intermediária','—',193],['battery','Carregador portátil 10.000 mAh','1 unid.',60],['blanket','Manta térmica','2 unid.',24],['bag','Castanhas ou frutas secas','1 pacote',15],['bolt','Apito','1 unid.',8]]}};
+var bud=S.get('bud',100);if(!L[bud])bud=100;
+function buildShop(){var c=calc(),l=L[bud],t=0,h='';
+  l.it.forEach(function(r){t+=r[3];h+='<div class="it"><span class="ic">'+ic(r[0])+'</span><span>'+r[1]+'</span><span class="q">'+r[2]+'</span><span class="v">R$ '+r[3]+'</span></div>'});
+  document.getElementById('items').innerHTML=h;document.getElementById('total').textContent='R$ '+t;
+  document.getElementById('lTitle').textContent=l.t;document.getElementById('lSub').textContent=l.s;
+  document.getElementById('lNote').textContent='Lista base pensada para 2 pessoas por 3 dias. Para a sua família ('+pl(c.p,'pessoa','pessoas')+', '+pl(c.d,'dia','dias')+'), a água total é de '+c.agua+' litros. Valores de referência, podem variar por região e loja.';
+  document.querySelectorAll('#tabs button').forEach(function(b){b.classList.toggle('on',+b.dataset.b===bud)});
 }
-document.querySelectorAll('#budget button').forEach(function(b){b.onclick=function(){bud=+b.dataset.b;store.set('bud',bud);buildShop()}});
+document.querySelectorAll('#tabs button').forEach(function(b){b.onclick=function(){bud=+b.dataset.b;S.set('bud',bud);buildShop()}});
 
-document.querySelectorAll('[data-save]').forEach(function(i){var k=i.dataset.save;i.value=store.get('f_'+k,'');i.oninput=function(){store.set('f_'+k,i.value)}});
+document.querySelectorAll('[data-save]').forEach(function(i){var k=i.dataset.save;i.value=S.get('f_'+k,'');i.oninput=function(){S.set('f_'+k,i.value)}});
 
-var TITLES={calc:['Calculadora Inteligente','Descubra o que a sua família precisa para 72 horas.'],check:['Checklist do kit','Marque o que já está pronto.'],compras:['Lista de compras','Escolha o orçamento que cabe no bolso.'],sos:['Emergência','Contatos, plano da família e revisão.']};
-function go(v){document.querySelectorAll('.view').forEach(function(s){s.classList.toggle('on',s.id==='v-'+v)});document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.go===v)});document.getElementById('title').textContent=TITLES[v][0];document.getElementById('sub').textContent=TITLES[v][1];window.scrollTo(0,0)}
+function go(v){document.querySelectorAll('.view').forEach(function(s){s.classList.toggle('on',s.id==='v-'+v)});
+  var tab={calc:'calc',res:'calc',check:'check',compras:'compras',plano:'plano',mais:'mais'}[v];
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.go===tab)});
+  document.body.style.background=(v==='res')?'#0F1F3D':'';window.scrollTo(0,0)}
 document.querySelectorAll('[data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
 
-var dp;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;document.getElementById('install').style.display='block'});
-document.getElementById('installBtn').onclick=function(){if(dp){dp.prompt();dp=null;document.getElementById('install').style.display='none'}};
+document.getElementById('share').onclick=function(){var c=calc();var t='Meu Kit 72h ('+pl(c.p,'pessoa','pessoas')+', '+pl(c.d,'dia','dias')+'): '+c.agua+' L de água, '+c.ref+' refeições, '+c.latas+' latas de proteína, '+c.bisc+' pacotes de biscoito e '+c.lan+' lanches.';
+  if(navigator.share){navigator.share({title:'Meu Kit 72h',text:t}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){toast('Resultado copiado')},function(){toast(t)})}else toast(t)};
+
+var dp;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e});
+document.getElementById('installBtn').onclick=function(){if(dp){dp.prompt();dp=null}else{var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(ios?'No Safari: Compartilhar → Adicionar à Tela de Início':'No menu do navegador: Instalar app / Adicionar à tela inicial')}};
+if(window.matchMedia('(display-mode: standalone)').matches){document.getElementById('installTxt').textContent='App já instalado neste aparelho'}
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
-upd();
+render();
 </script>
 </body>
 </html>
