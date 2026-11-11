@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /material/
+Disallow: /app-7d0009/

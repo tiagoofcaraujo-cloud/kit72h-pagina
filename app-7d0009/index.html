@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14284B">
+<meta name="robots" content="noindex">
+<title>Kit 72h — Calculadora Inteligente</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kit 72h">
+<style>
+:root{--navy:#14284B;--navy2:#0E1C36;--ink:#1E2433;--muted:#5B6475;--paper:#FBF7F0;--line:#E6DED2;--orange:#E8772E;--orange-d:#C55F1C;--soft:#FCE8D9;--teal:#1F8A7A;--teal-soft:#DDF1EC}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+header{background:var(--navy);color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 18px}
+header .k{font-size:12px;font-weight:800;letter-spacing:.16em;color:#F6B98A}
+header h1{font-size:24px;font-weight:900;margin-top:4px}
+header p{color:#C9D3E6;font-size:14px;margin-top:4px}
+main{max-width:640px;margin:0 auto;padding:16px}
+.view{display:none}.view.on{display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+h2{font-size:18px;color:var(--navy);margin-bottom:10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .l b{display:block;color:var(--navy)}.row .l small{color:var(--muted);font-size:13px}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:44px;height:44px;border-radius:12px;border:0;font-size:22px;font-weight:900;cursor:pointer}
+.step .m{background:#EEF1F6;color:var(--navy)}.step .p{background:var(--orange);color:#fff}
+.step output{min-width:34px;text-align:center;font-size:20px;font-weight:900;color:var(--navy)}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r{background:var(--soft);border-radius:16px;padding:14px}
+.r .v{font-size:28px;font-weight:900;color:var(--orange-d);line-height:1.05}
+.r .t{font-size:13px;font-weight:700;color:var(--navy);margin-top:2px}
+.r.full{grid-column:1/-1;background:var(--teal-soft)}.r.full .v{color:var(--teal)}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+ul.ck{list-style:none}
+ul.ck li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+ul.ck li:last-child{border-bottom:0}
+ul.ck input{width:24px;height:24px;flex:none;accent-color:var(--teal);margin-top:1px}
+ul.ck label{flex:1;cursor:pointer}
+ul.ck input:checked+label{color:var(--muted);text-decoration:line-through}
+.prog{height:10px;background:#EEF1F6;border-radius:99px;overflow:hidden;margin:6px 0 4px}.prog i{display:block;height:100%;background:var(--teal);width:0;transition:width .3s}
+.seg{display:flex;gap:8px;margin-bottom:12px}
+.seg button{flex:1;padding:12px 6px;border-radius:12px;border:2px solid var(--line);background:#fff;font-weight:800;color:var(--navy);font-size:15px;cursor:pointer;min-height:44px}
+.seg button.on{border-color:var(--orange);background:var(--soft);color:var(--orange-d)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:9px 0;border-bottom:1px solid var(--line)}td.n{text-align:right;font-weight:800;white-space:nowrap;padding-left:10px}
+tr.tot td{border:0;font-weight:900;color:var(--navy);padding-top:12px}
+a.tel{display:flex;justify-content:space-between;align-items:center;padding:14px;border-radius:14px;background:var(--navy);color:#fff;text-decoration:none;margin-bottom:10px;font-weight:800;min-height:56px}
+a.tel span{font-size:24px;color:#F6B98A}
+input[type=date],input[type=text]{width:100%;padding:12px;border:2px solid var(--line);border-radius:12px;font-size:16px;font-family:inherit;margin-top:6px}
+.btn{display:block;width:100%;text-align:center;background:var(--orange);color:#fff;font-weight:900;border:0;border-radius:14px;padding:15px;font-size:16px;cursor:pointer;text-decoration:none;min-height:50px}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line)}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:9}
+nav button{flex:1;border:0;background:none;padding:10px 4px 12px;font-size:12px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-height:60px}
+nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--orange-d)}
+#install{display:none;margin-bottom:14px}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="k">KIT 72H SEM PÂNICO</div>
+  <h1 id="title">Calculadora Inteligente</h1>
+  <p id="sub">Descubra o que a sua família precisa para 72 horas.</p>
+</header>
+<main>
+
+<div id="install" class="card">
+  <b style="color:var(--navy)">Instale o app no seu celular</b>
+  <p class="note" style="margin:4px 0 10px">Ele fica na tela inicial e funciona até sem internet.</p>
+  <button class="btn" id="installBtn">Instalar o app</button>
+</div>
+
+<!-- CALCULAR -->
+<section class="view on" id="v-calc">
+  <div class="card">
+    <h2>Quem mora na sua casa?</h2>
+    <div class="row"><div class="l"><b>Adultos</b><small>a partir de 12 anos</small></div><div class="step" data-k="adultos"></div></div>
+    <div class="row"><div class="l"><b>Crianças</b><small>de 2 a 11 anos</small></div><div class="step" data-k="criancas"></div></div>
+    <div class="row"><div class="l"><b>Bebês</b><small>até 2 anos</small></div><div class="step" data-k="bebes"></div></div>
+    <div class="row"><div class="l"><b>Idosos com remédio contínuo</b><small>já contados acima</small></div><div class="step" data-k="idosos"></div></div>
+    <div class="row"><div class="l"><b>Cães e gatos</b></div><div class="step" data-k="pets"></div></div>
+  </div>
+  <div class="card">
+    <h2>Sua necessidade para 72 horas</h2>
+    <div class="res" id="res"></div>
+    <p class="note">Água: 2 litros por pessoa por dia para beber, referência da Defesa Civil. Se tiver espaço, guarde mais para higiene e cozinha. Quantidades de comida são uma sugestão prática para 3 refeições por dia.</p>
+  </div>
+  <button class="btn" data-go="compras">Ver minha lista de compras</button>
+</section>
+
+<!-- CHECKLIST -->
+<section class="view" id="v-check">
+  <div class="card">
+    <h2>Meu kit</h2>
+    <div class="prog"><i id="progbar"></i></div>
+    <p class="note" id="progtxt" style="margin-top:0"></p>
+  </div>
+  <div id="checklists"></div>
+  <button class="btn ghost" id="resetCk">Desmarcar tudo</button>
+</section>
+
+<!-- COMPRAS -->
+<section class="view" id="v-compras">
+  <div class="card">
+    <h2>Lista de compras por orçamento</h2>
+    <div class="seg" id="budget">
+      <button data-b="100" class="on">Até R$ 100</button><button data-b="200">Até R$ 200</button><button data-b="300">Até R$ 300</button>
+    </div>
+    <table id="shop"></table>
+    <p class="note" id="shopnote"></p>
+  </div>
+</section>
+
+<!-- EMERGÊNCIA -->
+<section class="view" id="v-sos">
+  <div class="card">
+    <h2>Números de emergência</h2>
+    <a class="tel" href="tel:199">Defesa Civil <span>199</span></a>
+    <a class="tel" href="tel:193">Corpo de Bombeiros <span>193</span></a>
+    <a class="tel" href="tel:192">SAMU <span>192</span></a>
+    <a class="tel" href="tel:190">Polícia Militar <span>190</span></a>
+    <p class="note">Receba alertas grátis da Defesa Civil: mande o CEP da sua casa por SMS para <b>40199</b>.</p>
+  </div>
+  <div class="card">
+    <h2>Plano da família</h2>
+    <label class="note">Ponto de encontro<input type="text" data-save="encontro" placeholder="Ex.: praça em frente à escola"></label>
+    <label class="note" style="display:block;margin-top:10px">Contato de um parente<input type="text" data-save="contato" placeholder="Nome e telefone"></label>
+    <label class="note" style="display:block;margin-top:10px">Onde fica o kit<input type="text" data-save="local" placeholder="Ex.: armário do corredor, prateleira alta"></label>
+  </div>
+  <div class="card">
+    <h2>Próxima revisão do kit</h2>
+    <p class="note" style="margin:0">Revise a cada 6 meses: validade, água guardada, pilhas e remédios.</p>
+    <input type="date" data-save="revisao">
+  </div>
+</section>
+
+</main>
+
+<nav>
+  <button class="on" data-go="calc"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8"/></svg>Calcular</button>
+  <button data-go="check"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Checklist</button>
+  <button data-go="compras"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>Compras</button>
+  <button data-go="sos"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Emergência</button>
+</nav>
+
+<script>
+var store={get:function(k,d){try{var v=localStorage.getItem('k72_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem('k72_'+k,JSON.stringify(v))}catch(e){}}};
+var fam=store.get('fam',{adultos:2,criancas:2,bebes:0,idosos:0,pets:0});
+var lim={adultos:[1,12],criancas:[0,10],bebes:[0,5],idosos:[0,6],pets:[0,6]};
+
+document.querySelectorAll('.step').forEach(function(s){
+  var k=s.dataset.k;
+  s.innerHTML='<button class="m" aria-label="Diminuir">−</button><output></output><button class="p" aria-label="Aumentar">+</button>';
+  var o=s.querySelector('output');
+  function draw(){o.textContent=fam[k]}
+  s.querySelector('.m').onclick=function(){fam[k]=Math.max(lim[k][0],fam[k]-1);draw();upd()};
+  s.querySelector('.p').onclick=function(){fam[k]=Math.min(lim[k][1],fam[k]+1);draw();upd()};
+  draw();
+});
+
+function pessoas(){return fam.adultos+fam.criancas+fam.bebes}
+function upd(){
+  store.set('fam',fam);
+  var p=pessoas();
+  var agua=p*6, ref=p*9, latas=Math.ceil((fam.adultos+fam.criancas)*3), bisc=Math.ceil((fam.adultos+fam.criancas)*1.5), lanches=(fam.adultos+fam.criancas)*6;
+  var h='';
+  h+=box(agua+' L','Água para beber',true);
+  h+=box(ref,'Refeições');
+  h+=box(latas,'Latas de proteína');
+  h+=box(bisc,'Pacotes de biscoito');
+  h+=box(lanches,'Lanches (barras, frutas secas)');
+  if(fam.bebes) h+=box(fam.bebes*24,'Fraldas (8 por dia)');
+  if(fam.idosos) h+=box(fam.idosos,'Kit de remédios + receitas');
+  if(fam.pets) h+=box(fam.pets,'Ração para 3 dias + água extra');
+  document.getElementById('res').innerHTML=h;
+  buildChecklists(); buildShop();
+}
+function box(v,t,full){return '<div class="r'+(full?' full':'')+'"><div class="v">'+v+'</div><div class="t">'+t+'</div></div>'}
+
+var CK=[
+ ['Água e comida',['Água para beber (veja o total na calculadora)','Enlatados que se comem frios','Biscoitos, torradas ou pão de forma','Barras de cereal, castanhas ou frutas secas','Leite UHT ou em pó','Abridor de lata manual']],
+ ['Saúde',['Remédios de uso contínuo + receitas','Analgésico e antitérmico de costume','Gaze, esparadrapo, curativos e antisséptico','Soro fisiológico','Álcool em gel']],
+ ['Luz e comunicação',['Lanterna ou lâmpada LED recarregável','Pilhas reserva','Carregador portátil carregado','Rádio a pilha','Contatos escritos em papel','Apito']],
+ ['Higiene e abrigo',['Sabonete, pasta e escova de dente','Sacos de lixo','Manta térmica ou cobertor leve','Uma muda de roupa por pessoa','Capa de chuva']],
+ ['Documentos e dinheiro',['RG, CPF e certidões em saco com fecho','Cartão do SUS e de vacina','Dinheiro em espécie (notas pequenas)','Foto dos documentos no celular']]
+];
+function extra(){var e=[];if(fam.bebes)e.push(['Bebês',['Fraldas para 3 dias','Lenços umedecidos e pomada','Leite ou fórmula de costume','Mamadeiras limpas']]);if(fam.pets)e.push(['Pets',['Ração para 3 dias','Água extra para o pet','Coleira, guia e caixa de transporte','Carteira de vacina do pet']]);return e}
+var done=store.get('done',{});
+function buildChecklists(){
+  var all=CK.concat(extra()),h='',tot=0,ok=0;
+  all.forEach(function(g,gi){h+='<div class="card"><h2>'+g[0]+'</h2><ul class="ck">';g[1].forEach(function(it,ii){var id=g[0]+'|'+it;tot++;if(done[id])ok++;h+='<li><input type="checkbox" id="c'+gi+'_'+ii+'" data-id="'+id.replace(/"/g,'')+'"'+(done[id]?' checked':'')+'><label for="c'+gi+'_'+ii+'">'+it+'</label></li>'});h+='</ul></div>'});
+  var c=document.getElementById('checklists');c.innerHTML=h;
+  c.querySelectorAll('input').forEach(function(i){i.onchange=function(){done[i.dataset.id]=i.checked;store.set('done',done);prog()}});
+  prog();
+  function prog(){var t=0,o=0;c.querySelectorAll('input').forEach(function(i){t++;if(i.checked)o++});document.getElementById('progbar').style.width=(t?o/t*100:0)+'%';document.getElementById('progtxt').textContent=o+' de '+t+' itens prontos';}
+}
+document.getElementById('resetCk').onclick=function(){done={};store.set('done',done);buildChecklists()};
+
+var LISTS={
+ 100:[['3 galões de água 5 L',30],['4 latas de sardinha ou atum',24],['2 pacotes de cream cracker',10],['1 caixa de barra de cereal',9],['1 lata de milho',5],['4 pilhas AA',15],['Sacos com fecho',6]],
+ 200:[['Tudo da lista de R$ 100',99],['Lâmpada LED recarregável',45],['Itens de farmácia (gaze, esparadrapo, antisséptico, soro)',35],['2 latas de feijão pronto',14]],
+ 300:[['Tudo da lista de R$ 200',193],['Carregador portátil 10.000 mAh',60],['2 mantas térmicas',24],['Castanhas ou frutas secas',15],['Apito',8]]
+};
+var bud=store.get('bud',100);
+function buildShop(){
+  var L=LISTS[bud],t=0,h='';
+  L.forEach(function(r){t+=r[1];h+='<tr><td>'+r[0]+'</td><td class="n">≈ R$ '+r[1]+'</td></tr>'});
+  h+='<tr class="tot"><td>Total para 2 pessoas</td><td class="n">≈ R$ '+t+'</td></tr>';
+  document.getElementById('shop').innerHTML=h;
+  var p=pessoas();
+  document.getElementById('shopnote').textContent='Lista pensada para 2 pessoas. Sua casa tem '+p+(p===1?' pessoa':' pessoas')+': para a água, você precisa de '+(p*6)+' litros no total. Preços aproximados de referência (nov/2026); variam por cidade e loja.';
+  document.querySelectorAll('#budget button').forEach(function(b){b.classList.toggle('on',+b.dataset.b===bud)});
+}
+document.querySelectorAll('#budget button').forEach(function(b){b.onclick=function(){bud=+b.dataset.b;store.set('bud',bud);buildShop()}});
+
+document.querySelectorAll('[data-save]').forEach(function(i){var k=i.dataset.save;i.value=store.get('f_'+k,'');i.oninput=function(){store.set('f_'+k,i.value)}});
+
+var TITLES={calc:['Calculadora Inteligente','Descubra o que a sua família precisa para 72 horas.'],check:['Checklist do kit','Marque o que já está pronto.'],compras:['Lista de compras','Escolha o orçamento que cabe no bolso.'],sos:['Emergência','Contatos, plano da família e revisão.']};
+function go(v){document.querySelectorAll('.view').forEach(function(s){s.classList.toggle('on',s.id==='v-'+v)});document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.go===v)});document.getElementById('title').textContent=TITLES[v][0];document.getElementById('sub').textContent=TITLES[v][1];window.scrollTo(0,0)}
+document.querySelectorAll('[data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
+
+var dp;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;document.getElementById('install').style.display='block'});
+document.getElementById('installBtn').onclick=function(){if(dp){dp.prompt();dp=null;document.getElementById('install').style.display='none'}};
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+upd();
+</script>
+</body>
+</html>
