@@ -219,7 +219,7 @@ function buildShop(){
   h+='<tr class="tot"><td>Total para 2 pessoas</td><td class="n">≈ R$ '+t+'</td></tr>';
   document.getElementById('shop').innerHTML=h;
   var p=pessoas();
-  document.getElementById('shopnote').textContent='Lista pensada para 2 pessoas. Sua casa tem '+p+(p===1?' pessoa':' pessoas')+': para a água, você precisa de '+(p*6)+' litros no total. Preços aproximados de referência (nov/2026); variam por cidade e loja.';
+  document.getElementById('shopnote').textContent='Lista pensada para 2 pessoas. Sua casa tem '+p+(p===1?' pessoa':' pessoas')+': para '+fam.dias+(fam.dias===1?' dia':' dias')+', você precisa de '+(p*2*fam.dias)+' litros de água no total. Preços aproximados de referência (nov/2026); variam por cidade e loja.';
   document.querySelectorAll('#budget button').forEach(function(b){b.classList.toggle('on',+b.dataset.b===bud)});
 }
 document.querySelectorAll('#budget button').forEach(function(b){b.onclick=function(){bud=+b.dataset.b;store.set('bud',bud);buildShop()}});
